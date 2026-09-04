@@ -1,0 +1,32 @@
+services:
+  api:
+    build:
+      context: ./api-tasks
+    image: apptasks-api
+    container_name: apptasks-api
+    environment:
+      PORT: 3000
+      DB_PATH: /app/data/tasks.db
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+    volumes:
+      - api-data:/app/data
+    ports:
+      - "${API_PORT:-3000}:3000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./vue-tasks
+      args:
+        # URL que o navegador usa para falar com a API (embutida no build).
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api}
+    image: apptasks-web
+    container_name: apptasks-web
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  api-data:
