@@ -23,7 +23,7 @@ containerizados e orquestrados via Docker Compose:
 | HTTP              | **Axios**                      | Instância única em `src/services/api.ts` com interceptors            |
 | Feedback visual   | **SweetAlert2**                | Modais de confirmação e erro                                         |
 | Ícones            | **lucide-vue-next**            | Ícones dos componentes                                               |
-| Type-check        | **vue-tsc**                    | Checagem de tipos dos `.vue` (usado só localmente — ver *Notas*)     |
+| Type-check        | **vue-tsc**                    | Checagem de tipos dos `.vue`, roda antes do build (`npm run build`)  |
 
 ### Como o front está organizado
 
@@ -83,7 +83,8 @@ flowchart LR
    para o Vite);
 2. recebe `ARG VITE_API_URL` (default `http://localhost:3000/api`) e o expõe como
    `ENV` — o Vite embute esse valor no bundle;
-3. `npx vite build` gera os estáticos em `/app/dist`.
+3. `npm run build` (`vue-tsc -b && vite build`) type-checa e gera os estáticos
+   em `/app/dist`.
 
 **Stage `serve` (`nginx:1.27-alpine`)**
 
@@ -195,9 +196,4 @@ docker compose down -v     # remove também o banco
 
 ## Notas
 
-- O build do front no Docker usa `npx vite build` em vez do script
-  `npm run build`. O script roda `vue-tsc -b` antes, e o type-check hoje falha por
-  questões pré-existentes do projeto (sem shims para `*.vue`, alias `@` ausente no
-  `tsconfig.app.json`, `noImplicitAny` em `src/utils/storage.ts`). Isso não afeta
-  o bundle gerado pelo Vite.
 - Detalhes dos endpoints da API estão em [`api-tasks/README.md`](api-tasks/README.md).

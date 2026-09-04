@@ -5,6 +5,12 @@
     "types": ["vite/client"],
     "allowArbitraryExtensions": true,
 
+    /* Paths (espelha os aliases do vite.config.ts) */
+    "paths": {
+      "@/*": ["./src/*"],
+      "@composables/*": ["./src/composables/*"]
+    },
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
